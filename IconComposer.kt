@@ -1,3 +1,137 @@
+import android.util.Log
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material.icons.materialPath
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.PathNode
+import androidx.compose.ui.graphics.vector.PathParser
+
+fun Icon(pathData: String): ImageVector {
+    val b = PathParser().parsePathString(pathData).toNodes()
+    val ret = materialIcon("parsed_icon"){
+        materialPath{
+            b.forEach {
+                when(it){
+                    is PathNode.RelativeMoveTo->{
+                        moveToRelative(it.dx, it.dy)
+                    }
+                    is PathNode.MoveTo->{
+                        moveTo(it.x, it.y)
+                    }
+                    is PathNode.RelativeLineTo->{
+                        lineToRelative(it.dx, it.dy)
+                    }
+                    is PathNode.LineTo->{
+                        lineTo(it.x,it.y)
+                    }
+                    is PathNode.RelativeHorizontalTo->{
+                        horizontalLineToRelative(it.dx)
+                    }
+                    is PathNode.HorizontalTo->{
+                        horizontalLineTo(it.x)
+                    }
+                    is PathNode.RelativeVerticalTo->{
+                        verticalLineToRelative(it.dy)
+                    }
+                    is PathNode.VerticalTo->{
+                        verticalLineTo(it.y)
+                    }
+                    is PathNode.RelativeCurveTo->{
+                        curveToRelative(
+                            it.dx1,
+                            it.dy1,
+                            it.dx2,
+                            it.dy2,
+                            it.dx3,
+                            it.dy3,
+                        )
+                    }
+                    is PathNode.CurveTo->{
+                        curveTo(
+                            it.x1,
+                            it.y1,
+                            it.x2,
+                            it.y2,
+                            it.x3,
+                            it.y3,
+                        )
+                    }
+                    is PathNode.RelativeReflectiveCurveTo->{
+                        reflectiveCurveToRelative(
+                            it.dx1,
+                            it.dy1,
+                            it.dx2,
+                            it.dy2,
+                        )
+                    }
+                    is PathNode.ReflectiveCurveTo->{
+                        reflectiveCurveTo(
+                            it.x1,
+                            it.y1,
+                            it.x2,
+                            it.y2,
+                        )
+                    }
+                    is PathNode.RelativeQuadTo->{
+                        quadToRelative(
+                            it.dx1,
+                            it.dy1,
+                            it.dx2,
+                            it.dy2,
+                        )
+                    }
+                    is PathNode.QuadTo->{
+                        quadTo(
+                            it.x1,
+                            it.y1,
+                            it.x2,
+                            it.y2,
+                        )
+                    }
+                    is PathNode.RelativeReflectiveQuadTo->{
+                        reflectiveQuadToRelative(
+                            it.dx,
+                            it.dy
+                        )
+                    }
+                    is PathNode.ReflectiveQuadTo->{
+                        reflectiveQuadTo(
+                            it.x,
+                            it.y
+                        )
+                    }
+                    is PathNode.RelativeArcTo->{
+                        arcToRelative(
+                            it.horizontalEllipseRadius,
+                            it.verticalEllipseRadius,
+                            it.theta,
+                            it.isMoreThanHalf,
+                            it.isPositiveArc,
+                            it.arcStartDx,
+                            it.arcStartDy
+                        )
+                    }
+                    is PathNode.ArcTo->{
+                        arcTo(
+                            it.horizontalEllipseRadius,
+                            it.verticalEllipseRadius,
+                            it.theta,
+                            it.isMoreThanHalf,
+                            it.isPositiveArc,
+                            it.arcStartX,
+                            it.arcStartY,
+                        )
+                    }
+                    is PathNode.Close->{
+                        close()
+                    }
+                    //else->nothing
+                }
+            }
+        }
+    }
+    return ret
+}
+//////////////////////////////////////////////////////////////////
 fun ComposeIcon(pathData: String): ImageVector {
     val b = PathParser().parsePathString(pathData).toNodes()
     val s = mutableListOf<String>()
